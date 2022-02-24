@@ -1,49 +1,85 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/students/:name', function(req, res) {
-    let studentName = req.params.name
-    console.log(studentName)
-    res.send(studentName)
-});
+let players =
+   [
+       {
+           "name": "manish",
+           "dob": "1/1/1995",
+           "gender": "male",
+           "city": "jalandhar",
+           "sports": [
+               "swimming"
+           ],
+           "bookings": [
+            {
+                "bookingNumber": 1,
+                "sportId": "",
+                "centerId": "",
+                "type": "private",
+                "slot": '16286598000000',
+                "bookedOn": '31/08/2021',
+                "bookedFor": '01/09/2021'
+            },
+            {
+                "bookingNumber": 2,
+                "sportId": "",
+                "centerId": "",
+                "type": "private",
+                "slot": '16286518000000',
+                "bookedOn": '31/08/2001',
+                "bookedFor": '01/09/2001'
+            },
 
-//1
-router.get('/movies', function(req, res) {
-    res.send('["Avengers","Iron Man","Thor:Ragnarok","The Incredible Hulk"]')
-});
-//2
-router.get('/movies/:moviesId', function(req, res) {
-    let myMovies=["Avengers","Iron Man","Thor:Ragnarok","The Incredible Hulk"];
-    let seeMovie=req.params.moviesId;
-    if(seeMovie>=myMovies.length-1)
-    {
-        res.send("Movies doesn't found");
-    }
-    else{
-        res.send(myMovies[seeMovie]);
-    }
-});
-//3
-router.get('/films', function(req, res) {
-    res.send([{id:1,name:'tenet'},{id:2,name:'Midnight Summer'},{id:3,name:'harry potter'}]);
-});  
+           ]
+       },
+       {
+           "name": "gopal",
+           "dob": "1/09/1995",
+           "gender": "male",
+           "city": "delhi",
+           "sports": [
+               "soccer"
+           ],
+           "bookings": []
+       },
+       {
+           "name": "lokesh",
+           "dob": "1/1/1990",
+           "gender": "male",
+           "city": "mumbai",
+           "sports": [
+               "soccer"
+           ],
+           "bookings": []
+       },
+    ];
 
-//4
-router.get('/watchContent/:watchContentId', function(req, res) {
-    let myFilms=[{id:1,name:'tenet'},{id:2,name:'Midnight Summer'},{id:3,name:'harry potter'}];
-    let value=req.params.watchContentId;
-    let found=false;
-    for(let i=0;i<myFilms.length;i++)
+    router.post("/players", function(req, res) {
+        let value=req.body.name;
+        let value1=req.body.dob;
+        let value2=req.body.gender;
+        let value3=req.body.city;
+        let value4=req.body.sports;
+        let value5=req.body.bookings;
+        let players1;
+        for(let i=0;i<players.length;i++)
     {
-        if(myFilms[i].id==value)
+        if(players[i].name==value)
         {
-            found=true;
-            res.send(myFilms[i]);
-            break
+           res.send("Player With same name already exist");
         }
+        
+        else
+        {
+            players.push(value,value1,value2,value3,value4,value5);
+            
+            res.send({msg:players,status:true});
+        }
+        
     }
-});  
-
-
+    });
+    
 
 module.exports = router;
+
