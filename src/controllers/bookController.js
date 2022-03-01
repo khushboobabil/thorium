@@ -4,11 +4,32 @@ const BookModel= require("../models/bookModel")
 const createBook= async function (req, res) {
     let data= req.body
 
-    let savedData= await BookModel.create(data)
-    res.send({msg: savedData})
+    let newBook= await BookModel.create(data)
+    res.send({msg: newBook})
 }
 
-const getBooksData= async function (req, res) {
+const bookList= async function (req, res) {
+    let namedBooks= await BookModel.find( ).select({bookName:1,authorName:1});
+    res.send({msg: namedBooks})
+}
+
+const getBooksInYear= async function (req, res) {
+    let input= req.query.k
+    let booksInYear= await BookModel.find({ year: { $eq:  input }  } );
+    res.send({msg: booksInYear})
+}
+
+const getXINRBooks= async function (req, res) {
+    //let input= req.query.k
+    let bookPrice= await BookModel.find({ prices : { $in: [100,200 ,500] } } );
+    res.send({msg: bookPrice})
+}
+const getRandomBooks= async function (req, res) {
+        //let input= req.query.k
+        let resultedBooks= await BookModel.find( { stockAvailable : true , totalPages:  { $gt:  100 }  });
+        res.send({msg: resultedBooks})
+    }
+/*const getBooksData= async function (req, res) {
 
     // let allBooks= await BookModel.find( ).count() // COUNT
 
@@ -61,10 +82,10 @@ const getBooksData= async function (req, res) {
     // let allBooks= await BookModel.find( { bookName:  /^Int/  }) 
     // let allBooks= await BookModel.find( { bookName:  /^INT/i  }) 
     // let allBooks= await BookModel.find( { bookName:  /5$/  }) 
-    // let allBooks= await BookModel.find( { bookName:  /.*Programming.*/i  }) 
+    // let allBooks= await BookModel.find( { bookName:  /.*Programming.*/
     
     // ASYNC AWAIT
-    
+    /*
     let a= 2+4
     a= a + 10
     console.log(a)
@@ -78,8 +99,10 @@ const getBooksData= async function (req, res) {
     b= b+ 10
     console.log(b)
     res.send({msg: allBooks})
-}
+}*/
 
-
-module.exports.createBook= createBook
-module.exports.getBooksData= getBooksData
+module.exports.createBook= createBook;
+module.exports.bookList= bookList;
+module.exports.getBooksInYear= getBooksInYear;
+module.exports.getXINRBooks= getXINRBooks;
+module.exports.getRandomBooks= getRandomBooks;
