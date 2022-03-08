@@ -49,7 +49,7 @@ const getUserData = async function (req, res) {
 
   console.log(token);
   
-  // If a token is present then decode the token with verify function
+  //If a token is present then decode the token with verify function
   // verify takes two inputs:
   // Input 1 is the token to be decoded
   // Input 2 is the same secret with which the token was generated
@@ -79,12 +79,20 @@ const updateUser = async function (req, res) {
     return res.send("No such user exists");
   }
 
-  let userData = req.body;
-  let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData);
-  res.send({ status: updatedUser, data: updatedUser });
+  let userUpdatedNumber = req.body.mobile;
+  let updatedUserMoblieNumber = await userModel.findOneAndUpdate({_id:userId},{$set: {mobile:userUpdatedNumber}},{upsert:true,new:true});
+  res.send({ status: true, data: updatedUserMoblieNumber });
 };
 
+const isdeletedUser = async function (req, res) {
+  let isDeletedId = req.params.userId;
+  let isDeletedProperty = await userModel.findByIdAndUpdate({_id:isDeletedId},{$set: {isDeleted:true}},{new:true});
+  res.send({ status: true, data: isDeletedProperty });
+};
+
+
 module.exports.createUser = createUser;
+module.exports.loginUser = loginUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
-module.exports.loginUser = loginUser;
+module.exports.isdeletedUser = isdeletedUser;
