@@ -1,26 +1,40 @@
+const jwt = require("jsonwebtoken");
 
-const mid1= function ( req, res, next) {
-    req.falana= "hi there. i am adding something new to the req object"
-    console.log("Hi I am a middleware named Mid1")
-    next()
-}
 
-const mid2= function ( req, res, next) {
-    console.log("Hi I am a middleware named Mid2")
-    next()
-}
+    const tokenCheck=function(req,res,next){
+        try{
+            let token = req.headers["x-auth-token"];
+            if(!token) return res.send({ status:false, msg:"token must be present"})
+            let decodedToken = jwt.verify(token, "functionup-thorium")
+            if(!decodedToken) return res.send({ status: false, msg: "token is invalid"})
+            next()
+        }
+        catch (error){
+            res.status(401).send(error.message)                
+         }
 
-const mid3= function ( req, res, next) {
-    console.log("Hi I am a middleware named Mid3")
-    next()
-}
+        
+        }
 
-const mid4= function ( req, res, next) {
-    console.log("Hi I am a middleware named Mid4")
-    next()
-}
 
-module.exports.mid1= mid1
-module.exports.mid2= mid2
-module.exports.mid3= mid3
-module.exports.mid4= mid4
+        
+
+        const authorise = function(req, res, next) {
+            try{
+            let token = req.headers["x-auth-token"];
+            let decodedToken = jwt.verify(token, 'functionup-thorium')
+            let userToBeModified = req.params.userId
+            let userLoggedIn = decodedToken.userId
+            if(userToBeModified != userLoggedIn) return res.send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
+
+            // comapre the logged in user's id and the id in request
+            next()
+            }
+            catch (error){
+                res.status(403).send(error.message)                
+             }
+        }
+
+    module.exports.tokenCheck =tokenCheck
+
+    module.exports.authorise =authorise
